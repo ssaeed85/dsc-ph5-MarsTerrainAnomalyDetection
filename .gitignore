@@ -127,3 +127,15 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+# Custom Rules:
+# ignore image sub folders
+images/*/
+
+# ignores subfolders
+data/*/
+
+# ignore extracted and compressed data
+*.zip
+extractedData/
