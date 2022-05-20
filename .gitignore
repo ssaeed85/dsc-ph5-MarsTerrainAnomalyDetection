@@ -139,3 +139,6 @@ data/*/
 # ignore extracted and compressed data
 *.zip
 extractedData/
+
+# ignore tensorflow model checkpoint folder
+tf_checkpoints/
