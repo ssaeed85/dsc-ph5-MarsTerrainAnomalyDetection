@@ -1,35 +1,39 @@
 import streamlit as st
 import tensorflow as tf
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from glob import glob
 import random
 from PIL import Image, ImageDraw
+import pandas as pd
+import os
+import shutil
 
 import numpy as np
 np.random.seed(42)
 
-# def drawBoundingRectangle(coordsTup , ImgObj, color='#ff0000', width=5, alpha=1.0):
-#     """
-#     Creates a box to highligt a location on the image object
+def drawBoundingRectangle(coordsTup , ImgObj, color='#ff0000', width=5, alpha=1.0):
+    """
+    Creates a box to highligt a location on the image object
 
-#     coordsTup = tuple of bbox corners. 
-#         top left coords = first 2 elements
-#         bottom right coords = last 2 elements
-#     width: width of outline
-#     color: hex value of color. Default red
-#     alpha: opacity. Range: 0,1
-#     """
-#     #Checking for transparency
-#     if alpha > 1 or alpha < 0: 
-#         alpha =1
+    coordsTup = tuple of bbox corners. 
+        top left coords = first 2 elements
+        bottom right coords = last 2 elements
+    width: width of outline
+    color: hex value of color. Default red
+    alpha: opacity. Range: 0,1
+    """
+    #Checking for transparency
+    if alpha > 1 or alpha < 0: 
+        alpha =1
     
-#     color_with_opacity = color + hex(int(alpha*255))[-2:]
+    color_with_opacity = color + hex(int(alpha*255))[-2:]
     
-#     # Draw a rectangle
-#     draw = ImageDraw.Draw(ImgObj,'RGBA')
+    # Draw a rectangle
+    draw = ImageDraw.Draw(ImgObj,'RGBA')
     
-#     p1_coord = coordsTup[0:2]
-#     p2_coord = coordsTup[2:4]
-#     draw.rectangle([p1_coord, p2_coord], outline=color_with_opacity, width=width)
+    p1_coord = coordsTup[0:2]
+    p2_coord = coordsTup[2:4]
+    draw.rectangle([p1_coord, p2_coord], outline=color_with_opacity, width=width)
     
     
 def createNewPotentialBboxes(imgObj):
@@ -63,33 +67,58 @@ def createNewPotentialBboxes(imgObj):
     df_bboxPotentials.to_csv(f'mass_maps/bboxPotentials_{img_width}_{img_height}.csv',index = False)
     return df_bboxPotentials
 
-# def get_bboxCoords(x_cnt,y_cnt,winsize):
-#     return int(x_cnt - winsize/2),int(y_cnt - winsize/2),int(x_cnt + winsize/2),int(y_cnt + winsize/2)
+def get_bboxCoords(x_cnt,y_cnt,winsize):
+    return int(x_cnt - winsize/2),int(y_cnt - winsize/2),int(x_cnt + winsize/2),int(y_cnt + winsize/2)
 
-# def getPotentialBboxes(imgObj,forceCreateNew = False):
+def getPotentialBboxes(imgObj,forceCreateNew = False):
     
-#     img_width,  img_height = imgObj.size
+    img_width,  img_height = imgObj.size
     
-#     if forceCreateNew:
-#         print('force creating new')
-#         df_bboxPotentials = createNewPotentialBboxes(imgObj)
-#     else:
-#         try:
-#             print('reading current')
-#             df_bboxPotentials = pd.read_csv(f'mass_maps/bboxPotentials_{img_width}_{img_height}.csv')
-#         except FileNotFoundError:
-#             print('no existing doc. creating')
-#             df_bboxPotentials = createNewPotentialBboxes(imgObj)
-        
-        
-#     return df_bboxPotentials
+    if forceCreateNew:
+        print('force creating new')
+        df_bboxPotentials = createNewPotentialBboxes(imgObj)
+    else:
+        try:
+            print('reading current')
+            df_bboxPotentials = pd.read_csv(f'mass_maps/bboxPotentials_{img_width}_{img_height}.csv')
+        except FileNotFoundError:
+            print('no existing doc. creating')
+            df_bboxPotentials = createNewPotentialBboxes(imgObj)
+            
+    return df_bboxPotentials
 
-# def getClassFromPred(pred,threshold):
-#     if max(pred)>threshold and pred.argmax()!=4 :
-#         return pred.argmax()
-#     return -1
+def sliceAndDice(listOfImages):
+    slicePath = f"{'/'.join(im.filename.split('/')[:-1])}/_slices_{im.filename.split('/')[-1]}/"
+    slicePath = slicePath.replace('.','_')
+
+    if (os.path.exists(slicePath) and os.path.isdir(slicePath)):
+        shutil.rmtree(slicePath)
+    os.makedirs(slicePath)
+
+    for count, img in enumerate(list_imagesToClassify):
+        img.save(''.join([slicePath,str(count),'_',(im.filename.split('/')[-1])]))
+
+def getClassFromPred(pred,threshold):
+    if max(pred)>threshold :
+        return pred.argmax()
+    return -1
 
 
+def loadImageAndInit():
+    # st.image(img_path)
+    # im = Image.open(imgFile)
+    # img_width,  img_height = im.size
+    # df_bbox = getPotentialBboxes(im,forceCreateNew = True)
+    # list_imagesToClassify = [im.crop(df_bbox.iloc[rowNum]['bbox_bounds']) 
+    #                     for rowNum in range(0,df_bbox.shape[0])]
+    disableButton = False
+
+options={}
+colorMap={}
+getPredictionsAndVisualize = False
+img_path=None
+disableButton=True
+im_wAnnotations=None
 model = tf.keras.models.load_model('final_finalModel__jk__butReally_FinalModel.h5py')
 class_names = {'bright dune': 0,
  'crater': 1,
@@ -100,8 +129,6 @@ class_names = {'bright dune': 0,
  'spider': 6,
  'swiss cheese': 7}
 
-options={}
-colorMap={}
 
 with st.sidebar:
     st.title('Select colors for features:')    
@@ -114,47 +141,78 @@ with st.sidebar:
     colorMap[class_names['swiss cheese']] = st.color_picker('Swiss Cheese', '#481363')
     colorMap[class_names['other']] = st.color_picker('Other', '#F277FD')
 
-    # st.write('Select features to identify:')
-    # options['bright dune'] = st.checkbox('Bright Dunes')
-    # options['crater'] = st.checkbox('Craters',value=True)
-    # options['dark dune'] = st.checkbox('Dark Dunes')
-    # options['impact ejecta'] = st.checkbox('Impact Ejecta')
-    # options['slope streak'] = st.checkbox('Slope Streak')
-    # options['spider'] = st.checkbox('Spider')
-    # options['swiss cheese'] = st.checkbox('Swiss Cheese')
-    # options['other'] = st.checkbox('Other')
 
-    #List of options selected
-    options = st.multiselect(
+
+st.title("Mars Anomaly Detection")
+
+imgFile = st.file_uploader("Choose an image file", type="jpg",
+on_change=loadImageAndInit()
+)
+
+
+
+# if im_wAnnotations:
+#     st.image(im_wAnnotations)
+
+# if imgFile.on_change():
+#     st.image(imgFile)
+#     im = Image.open(imgFile)
+#     img_width,  img_height = im.size
+#     df_bbox = getPotentialBboxes(im,forceCreateNew = True)
+#     list_imagesToClassify = [im.crop(df_bbox.iloc[rowNum]['bbox_bounds']) 
+#                         for rowNum in range(0,df_bbox.shape[0])]
+#     disableButton = False
+
+
+
+
+
+options = st.multiselect(
      'Which features would you like to identify',
      ['Crater', 'Bright Dunes', 'Dark Dune', 'Impact Ejecta',
      'Slope Streak','Spider','Swiss Cheese','Other'],
-     ['Crater']
+     ['Crater'],
+     disabled=disableButton
      )
 
-
-
 options = [str.lower(x) for x in options]
+classes_to_visualize = [v for k,v in class_names.items() if k in options]
 
-st.write(options)
-st.title("Mars Anomaly Detection")
+thresh = st.slider('Confidence Threshold',value=0.9,min_value = 0.01, max_value= 1.0,disabled=disableButton)
 
-img_path=None
-disableButton=True
+if st.button('Get Predictions', disabled=disableButton):
+    sliceAndDice(list_imagesToClassify)
 
-if img_path is None:
-    img_path = st.file_uploader("Choose an image file", type="jpg")
+    predict_datagen = ImageDataGenerator(rescale=1./255)
 
-if img_path is not None:
-    st.image(img_path)
-    disableButton = False
+    # print(slicePath)
+    predict_generator = predict_datagen.flow_from_directory(
+        'mass_maps/',
+        target_size = (227,227),
+        batch_size=8,
+        color_mode='rgb',
+        class_mode=None
+    )
+    predict_generator.reset()
+
+    preds = model.predict(predict_generator)
+
+    df_bbox['predClass'] = [getClassFromPred(pred,thresh) for pred in preds]
+
+    mask_img = Image.new("RGBA", (img_width, img_height), (0, 0, 0, 0))
+    df_validBbox = df_bbox[df_bbox['predClass'].isin(classes_to_visualize)][['bbox_bounds','predClass']]
+
+    for idx in range(0, df_validBbox.shape[0]):
+        
+        drawBoundingRectangle(df_validBbox.iloc[idx]['bbox_bounds'],
+                            mask_img,
+                            color=colorMap[df_validBbox.iloc[idx]['predClass']]
+                                            )
+
+    im_wAnnotations = im.convert('RGB')
+
+    im_wAnnotations.paste(mask_img,(0,0),mask_img)
 
 
-
-
-
-st.button('Run Model', 
-key=None, 
-help=None, 
-on_click=None, 
-disabled=disableButton)
+if im_wAnnotations is not None:
+    st.image(im_wAnnotations)
