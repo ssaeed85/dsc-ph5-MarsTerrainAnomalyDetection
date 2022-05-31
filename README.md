@@ -1,6 +1,28 @@
 # MarsTerrainAnomalyDetection
 Using a set of images, train a Neural Network to identify interesting features on Mars topography
 
+
+
+# Business Understanding
+
+Space exploration and understanding has been growing over the last few decades with the spark being lit during the space race during the latter half of the 20th century. After the end of the Apollo space program, man's venture into space has been relegated to low earth orbit missions.  
+
+Unmanned missions have since had many a success story such as the Voyager 2 going interstellar in 2018, over 40 years after its launch. The future of space exploration is going to be handled by such manned missions for the foreseeable future. However, being physically on site isn't the only way to explore space.  
+
+For centuries, man has looked up at the night sky to find out more about our celestial neighbors. With improvements in technologies our ability to gather data through telescopes and cameras has improved significantly and the value provided by telescopes in space has been immeasurable. The James Webb (infrared) telescope was launched in December 2021 and hopes to view objects too old, distant, and faint for the Hubble Space Telescope.
+
+Pointing the telescope and gathering data is only the first step. Being able to parse terabytes, petabytes or even yottabytes of data manually is a nigh impossible task, a task computer vision is especially suited for. Being able to identify interesting features can help us whittle down potential candidates to explore 'in-person' and in the long run help mitigate losses.
+
+Interest in space exploration has seen a resurgence with private enterprise taking an interest. Although this project specifically looks at the Mars topography, similar techniques can be applied to any celestial body, or even to our home planet.
+
+
+# Overview
+We shall be using images captured from the HiRISE camera system on board the Mars Reconnaisance Orbiter which was built under direction from University of Arizona's Lunar and Planetary Laboratory. Following is an excerpt from the [University of Arizona website](https://www.lpl.arizona.edu/missions/hirise-mro).
+
+>The **Hi**gh **R**esolution **I**maging **S**cience **E**xperiment (HiRISE) onboard the Mars Reconnaissance Orbiter, is the most powerful camera ever sent to another planet. The resolution of the camera allows us to see the Red Planet in amazing detail, and lets other missions, like the Mars Science Laboratory, find a safe place to land and carry out amazing science. The operations center, which includes not only observation planning, but the execution of commands sent to the spacecraft along with actual image processing, is located within LPL at the University of Arizona.
+
+We shall be building off of the work performed by the original team. The dataset comes pre-augmented and segmented into training, validation and test sets. The test side will be set aside to ascertain effectiveness of our final model. The training set will be used to train the model and the validation scores on the validation set will be used as a metric to pick our model, specifically our validation loss.
+
 # The Data:
 The work performed herein was built off of the shoulders of giants, the original project that created the dataset and labeled the images. Here follows an excerpt from their site describing the data.
 
@@ -43,29 +65,44 @@ The work performed herein was built off of the shoulders of giants, the original
 >
 >Other is a catch-all class that contains images that fit none of the defined classes of interest. This class makes up the majority of our data set.
 
+That last line in the description is going to be key, as can be seen by the figure below.
 
-# Business Understanding
+![img](./savedFigs/ImageDist_EntireDataset.jpg)
 
-Space exploration and understanding has been growing over the last few decades with the spark being lit during the space race during the latter half of the 20th century. After the end of the Apollo space program, man's venture into space has been relegated to low earth orbit missions.  
+Although the dataset is fairly large and the team has done a fantastic job with augmenting the dataset, there is a huge class imbalance. Even a baseline dummy classifier will achieve nearly 80% accuracy during training, in fact:
 
-Unmanned missions have since had many a success story such as the Voyager 2 going interstellar in 2018, over 40 years after its launch. The future of space exploration is going to be handled by such manned missions for the foreseeable future. However, being physically on site isn't the only way to explore space.  
+![img](./savedFigs/ImageDist_BySet.jpg)
 
-For centuries, man has looked up at the night sky to find out more about our celestial neighbors. With improvements in technologies our ability to gather data through telescopes and cameras has improved significantly and the value provided by telescopes in space has been immeasurable. The James Webb (infrared) telescope was launched in December 2021 and hopes to view objects too old, distant, and faint for the Hubble Space Telescope.
-
-Pointing the telescope and gathering data is only the first step. Being able to parse terabytes, petabytes or even yottabytes of data manually is a nigh impossible task, a task computer vision is especially suited for. Being able to identify interesting features can help us whittle down potential candidates to explore 'in-person' and in the long run help mitigate losses.
-
-Interest in space exploration has seen a resurgence with private enterprise taking an interest. Although this project specifically looks at the Mars topography, similar techniques can be applied to any celestial body, or even to our home planet.
+The numbers are higher in the test set, sitting at nearly 82%. Any chosen model would have to perform significantly better than this. Also, as a direct result of this, I decided to use validation loss as a metric to be used in conjunction with accuracy.
 
 
-# Overview
-We shall be using images captured from the HiRISE camera system on board the Mars Reconnaisance Orbiter which was built under direction from University of Arizona's Lunar and Planetary Laboratory. Following is an excerpt from the [University of Arizona website](https://www.lpl.arizona.edu/missions/hirise-mro).
-
->The __Hi__gh __R__esolution __I__maging __S__cience __E__xperiment (HiRISE) onboard the Mars Reconnaissance Orbiter, is the most powerful camera ever sent to another planet. The resolution of the camera allows us to see the Red Planet in amazing detail, and lets other missions, like the Mars Science Laboratory, find a safe place to land and carry out amazing science. The operations center, which includes not only observation planning, but the execution of commands sent to the spacecraft along with actual image processing, is located within LPL at the University of Arizona.
-
-We shall be building off of the work performed by the original team. The dataset comes pre-augmented and segmented into training, validation and test sets. The test side will be set aside to ascertain effectiveness of our final model. The training set will be used to train the model and the validation scores on the validation set will be used as a metric to pick our model, specifically our validation loss.
 
 
 # Modeling
+
+## Metric
+---
+Validation loss will be the primary metric to determine model performance in conjunction with validation accuracy. More specifically, the loss function will be categorical cross entropy, a loss function specific to multiclass classification. Since our dataset is heavily imbalanced, and having a high accuracy is not going to be enough,validation loss gives us insight quality of the accurate predictions. As a brief intro:
+
+
+![img](./savedFigs/CrossEntropyLoss_Fig1.jpeg)\
+Image credit: [Kilprono Elijah Koech](https://towardsdatascience.com/cross-entropy-loss-function-f38c4ec8643e)
+
+___S___ is a list of probabilities for the 4 classes associated with the above example and ___T___ are the ground truth values for the same. The cross entropy validation loss formula is:
+
+$$
+\begin{align}
+L_{cross-entropy} ~&=~ -\Sigma_{i=1}~T_i~ln(S_i)\\
+&=~ -[ 1 \cdot ln(0.775) ~+~ 0 \cdot ln(0.116) ~+~ 0 \cdot ln(0.039) ~+~ 0 \cdot ln(0.070)]\\
+&=~ -[ 1 \cdot ln(0.775)]\\
+&=~ 0.2549
+\end{align}
+$$
+
+
+With the goal of minimizing validation loss, looking at the math, it penalizes the further away the logit value is from the true value. A model that classifies by calling the most frequent class, would result in a validation loss of *inf* because in cases where the model is wrong, the loss function returns a ***ln(0)***
+
+As a result although we shall be looking at the accuracy of our model as an indicator of performance, we shall be using cross entropy validation loss as metric to pick our best performing model.
 
 
 ## Callbacks
@@ -100,6 +137,24 @@ Lets have a quick look at the two different techniques on a couple of sample ima
 
 As you can see, both techniques reduce the dimensions of the image by the same amount, however with slightly different results with the differences being more evident than in others. However, my main takeway should be that MaxPooling tends to increase contrast which would allow the model to learn defining features better. Average Pooling retains the look of the original image better albeit at a lower resolution.
 
+## Methodology:
+---
+I took a three-pronged approach to try and achieve a good model:
+- training models from scratch. This is the most verbose part of the project with variations in architecture to increase or decrease complexity/regularizations.
+- training models on pre-established Convolutional Neural Net model architectures with a random weight initialization. Essentially training a [LeNet-5]() and a [AlexNet](https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf) from scratch.
+- training on a pre-trained model with existing weights. The model chosen for this was the [VGG16](https://arxiv.org/abs/1409.1556) model.
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 Image to slide on:
@@ -107,6 +162,14 @@ https://astrogeology.usgs.gov/search/map/Mars/GlobalSurveyor/MOLA/Mars_MGS_MOLA_
 
 
 
+# Citations: 
 
+LeNet-5 - [Gradient-Based Learning Applied to Document Recognition](http://yann.lecun.com/exdb/publis/pdf/lecun-98.pdf) - Yann LeCun, Léon Bottou, Yoshua Bengio, Patrick Haffner  
+AlexNet - [ImageNet Classification with Deep Convolutional Neural Networks]( \https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf) - Alex Krizhevsky,
+Ilya Sutskever,
+Geoffrey E. Hinton  
+VGG - [Very Deep Convolutional Networks for Large-Scale Image Recognition](https://arxiv.org/abs/1409.1556) - Karen Simonyan, Andrew Zisserman  
 
-https://towardsdatascience.com/cross-entropy-loss-function-f38c4ec8643e
+[HiRISE](https://www.uahirise.org/) - The Lunar & Planetray Laboratory at University of Arizona - Database of HiRISE images
+
+Detailed explanation of [Cross-Entropy Loss Function](https://towardsdatascience.com/cross-entropy-loss-function-f38c4ec8643e)
