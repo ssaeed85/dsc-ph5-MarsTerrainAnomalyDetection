@@ -141,3 +141,7 @@ extractedData/
 
 # ignore tensorflow model checkpoint folder
 tf_checkpoints/
+
+# ignore images of our slices
+mass_maps/_slices*
+mass_maps/bbox*
