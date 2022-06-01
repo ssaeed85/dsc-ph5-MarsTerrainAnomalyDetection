@@ -163,7 +163,7 @@ Of the models that were trained (in notebook [01_TensorflowModeling_Adam](01_Ten
 The best performing model was model 10 with a **validation_loss** of 0.4777 and a **validation_accuracy** of 86.55%
 
 ## Section II:
-Training models on pre-established CNN model architectures with a random weight initialization
+Training models on pre-established CNN model architectures with a random weight initialization. Details can be found in the notebooks, [03_TensorflowModeling_AlexNet](03_TensorflowModeling_AlexNet.ipynb) and [04_TensorflowModeling_LeNet](04_TensorflowModeling_LeNet.ipynb).
 
 ### AlexNet:
 
@@ -179,7 +179,15 @@ In the interest of time, I decided to prioritize other modeling techniques to tr
 Between the two models AlexNet performed marginally better with a **validation_loss** of 0.6076 and a **validation_accuracy** of 82.21%, where as LeNet performed with a **validation_loss** of 0.7575 and a **validation_accuracy** 79.49%
 
 ## Section III:
+![img](./savedFigs/vgg16-neural-network.jpg)
 
+In 2014, Karen Simonyan, Andrew Zissermanren wrote a paper on _Very Deep Convolutional Networks for Large-Scale Image Recognition_ using 16/19 layer variations of the same architecture called [VGG](https://arxiv.org/abs/1409.1556). This architecture has seen tremendous success in a variety of different arenas.  
+
+As part of the above paper the two variations tested are colloquially called `VGG16` and `VGG19`.  
+
+VGG16 achieves 92.7% top-5 test accuracy in *ImageNet*, a dataset comprising of over 14 million images belonging to 1000 distinct classes. The weights resulting from training the architecture for weeks is the same weights we will be using to initialize our model.  
+
+The original model was designed to work off of an *RGB* image sized *224x224*. To account for this our dataset is loaded as an RGB image even though it is natively a grayscale image. An additional `Flatten()` and `softmax` layer corresponding to our number of classes is added after the `vgg` layer.
 
 # Conclusions:
 The final chosen model was the VGG16 pretrained model which was run through 500 more iterations to fine tune the weights for my particular problem set. 
@@ -262,7 +270,7 @@ Geoffrey E. Hinton
 ├── 02_TensorflowModeling_FinalModels.ipynb  
 ├── 03_TensorflowModeling_AlexNet.ipynb  
 ├── 04_TensorflowModeling_LeNet.ipynb  
-├── 05_TensorflowModeling_TransferLearning.ipynb
+├── 05_TensorflowModeling_VGG16_TransferLearning.ipynb
 ├── 06_AnomalyDetection.ipynb
 |
 ├── README.md
