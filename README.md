@@ -84,9 +84,13 @@ The numbers are higher in the test set, sitting at nearly 82%. Any chosen model 
 ---
 Validation loss will be the primary metric to determine model performance in conjunction with validation accuracy. More specifically, the loss function will be categorical cross entropy, a loss function specific to multiclass classification. Since our dataset is heavily imbalanced, and having a high accuracy is not going to be enough,validation loss gives us insight quality of the accurate predictions. As a brief intro:
 
+<p style="text-align:center;">
+<img src="./savedFigs/CrossEntropyLoss_Fig1.jpeg" alt="Logo"></p>
 
-![img](./savedFigs/CrossEntropyLoss_Fig1.jpeg)\
-Image credit: [Kilprono Elijah Koech](https://towardsdatascience.com/cross-entropy-loss-function-f38c4ec8643e)
+<h4 style="text-align:center;">
+<a href="https://towardsdatascience.com/cross-entropy-loss-function-f38c4ec8643e">Image credit: Kilprono Elijah Koech</a>
+</h4>
+
 
 ___S___ is a list of probabilities for the 4 classes associated with the above example and ___T___ are the ground truth values for the same. The cross entropy validation loss formula is:
 
@@ -145,16 +149,39 @@ I took a three-pronged approach to try and achieve a good model:
 - training on a pre-trained model with existing weights. The model chosen for this was the [VGG16](https://arxiv.org/abs/1409.1556) model.
 
 
+# Results:
+
+## Section I:
+
+Of the models that were trained from scratch (in notebook [01_TensorflowModeling_Adam](01_TensorflowModeling_Adam.ipynb)), models 8, 10, and 11 seemed to be the most promising. These models were then further refined in [02_TensorflowModeling_FinalModels](02_TensorflowModeling_FinalModels.ipynb) to try and achieve the best validation score
+
+![img](./savedFigs/Model_8_10_11_Performance.jpg)
+
+The best performing model was model 10 with a **validation_loss** of 0.4777 and a **validation_accuracy** of 0.8655
+
+## Section II:
+### AlexNet:
+
+loss: 1.3249 - accuracy: 0.8453
+
+### LeNet-5:
+
+loss: 0.8822 - accuracy: 0.7733
+
+## Section III:
 
 
+# Conclusions:
+The final chosen model was the VGG16 pretrained model which was run through 500 more iterations to fine tune the weights for my particular problem set. 
+Although the metrics of the final model is quantitatively satisfactory, its performance on true unseen data was poor. The imbalance in the dataset aside, the class of `others` was essentially a catch all for images that couldn't be classified into the other categories and/or human labelers had a hard time classifying in general. 
 
+Even to the human eye these might look like they belong to the same set of features but they do not. The images belong to the classes `crater`, `impact ejecta` and `other` respectively.
 
+![img](./savedFigs/eg_crater.jpg) 
+![img](./savedFigs/eg_impactejecta.jpg) 
+![img](./savedFigs/eg_other.jpg) 
 
-
-
-
-
-
+One potential way of solving this issue would be to get even more data, but more importantly labeled data. This is especially true for the underepresented features like `spider`s and `impact ejecta`s. Maybe completely, reassess how to classify these images in the first place. 
 
 
 Image to slide on:
@@ -164,12 +191,12 @@ https://astrogeology.usgs.gov/search/map/Mars/GlobalSurveyor/MOLA/Mars_MGS_MOLA_
 
 # Citations: 
 
-LeNet-5 - [Gradient-Based Learning Applied to Document Recognition](http://yann.lecun.com/exdb/publis/pdf/lecun-98.pdf) - Yann LeCun, Léon Bottou, Yoshua Bengio, Patrick Haffner  
-AlexNet - [ImageNet Classification with Deep Convolutional Neural Networks]( \https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf) - Alex Krizhevsky,
+[Gradient-Based Learning Applied to Document Recognition](http://yann.lecun.com/exdb/publis/pdf/lecun-98.pdf) - LeNet-5 - Yann LeCun, Léon Bottou, Yoshua Bengio, Patrick Haffner  
+[ImageNet Classification with Deep Convolutional Neural Networks]( \https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf) - AlexNet - Alex Krizhevsky,
 Ilya Sutskever,
 Geoffrey E. Hinton  
-VGG - [Very Deep Convolutional Networks for Large-Scale Image Recognition](https://arxiv.org/abs/1409.1556) - Karen Simonyan, Andrew Zisserman  
+[Very Deep Convolutional Networks for Large-Scale Image Recognition](https://arxiv.org/abs/1409.1556) - VGG - Karen Simonyan, Andrew Zisserman  
 
 [HiRISE](https://www.uahirise.org/) - The Lunar & Planetray Laboratory at University of Arizona - Database of HiRISE images
 
-Detailed explanation of [Cross-Entropy Loss Function](https://towardsdatascience.com/cross-entropy-loss-function-f38c4ec8643e)
+[Cross-Entropy Loss Function](https://towardsdatascience.com/cross-entropy-loss-function-f38c4ec8643e) - A more detailed explanation
