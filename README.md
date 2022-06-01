@@ -148,25 +148,35 @@ I took a three-pronged approach to try and achieve a good model:
 - training models on pre-established Convolutional Neural Net model architectures with a random weight initialization. Essentially training a [LeNet-5]() and a [AlexNet](https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf) from scratch.
 - training on a pre-trained model with existing weights. The model chosen for this was the [VGG16](https://arxiv.org/abs/1409.1556) model.
 
+The results of each of these have a dedicated results section below
 
 # Results:
 
 ## Section I:
 
-Of the models that were trained from scratch (in notebook [01_TensorflowModeling_Adam](01_TensorflowModeling_Adam.ipynb)), models 8, 10, and 11 seemed to be the most promising. These models were then further refined in [02_TensorflowModeling_FinalModels](02_TensorflowModeling_FinalModels.ipynb) to try and achieve the best validation score
+Training CNN models from scratch 
+
+Of the models that were trained (in notebook [01_TensorflowModeling_Adam](01_TensorflowModeling_Adam.ipynb)), models 8, 10, and 11 seemed to be the most promising. These models were then further refined in [02_TensorflowModeling_FinalModels](02_TensorflowModeling_FinalModels.ipynb) to try and achieve the best validation score
 
 ![img](./savedFigs/Model_8_10_11_Performance.jpg)
 
-The best performing model was model 10 with a **validation_loss** of 0.4777 and a **validation_accuracy** of 0.8655
+The best performing model was model 10 with a **validation_loss** of 0.4777 and a **validation_accuracy** of 86.55%
 
 ## Section II:
+Training models on pre-established CNN model architectures with a random weight initialization
+
 ### AlexNet:
 
-loss: 1.3249 - accuracy: 0.8453
+![img](./savedFigs/AlexNet_Performance.jpg)
 
 ### LeNet-5:
 
-loss: 0.8822 - accuracy: 0.7733
+![img](./savedFigs/LeNet_Performance.jpg)
+
+For both these model architectures, the overall modeling process was very erratic, and progress was slow. My intuition would suggest to train with a smaller learning rate for a much higher number of iterations.
+In the interest of time, I decided to prioritize other modeling techniques to try and get a better model.
+
+Between the two models AlexNet performed marginally better with a **validation_loss** of 0.6076 and a **validation_accuracy** of 82.21%, where as LeNet performed with a **validation_loss** of 0.7575 and a **validation_accuracy** 79.49%
 
 ## Section III:
 
@@ -181,7 +191,7 @@ Even to the human eye these might look like they belong to the same set of featu
 ![img](./savedFigs/eg_impactejecta.jpg) 
 ![img](./savedFigs/eg_other.jpg) 
 
-One potential way of solving this issue would be to get even more data, but more importantly labeled data. This is especially true for the underepresented features like `spider`s and `impact ejecta`s. Maybe completely, reassess how to classify these images in the first place. 
+One potential way of solving this issue would be to get even more data, but more importantly labeled data. This is especially true for the underepresented features like `spider`s and `impact ejecta`s. Completely reassessing how to classify these images might also help.
 
 
 Image to slide on:
