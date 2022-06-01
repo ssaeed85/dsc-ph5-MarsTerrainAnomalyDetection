@@ -197,6 +197,12 @@ One potential way of solving this issue would be to get even more data, but more
 Image to slide on:
 https://astrogeology.usgs.gov/search/map/Mars/GlobalSurveyor/MOLA/Mars_MGS_MOLA_Shade_global_463m
 
+# Next Steps:
+
+- Retrain AlexNet and LeNet with a smaller learning rate for a high number of iterations to see if they perform any better
+- Use pretrained weights for AlexNet and LeNet to see if it performs any better
+- Drop the majority class `other` and see if resulting models are better at delineating features. Initial forays into this were not too promising.
+- Gather more labeled data
 
 
 # Citations: 
@@ -210,3 +216,59 @@ Geoffrey E. Hinton
 [HiRISE](https://www.uahirise.org/) - The Lunar & Planetray Laboratory at University of Arizona - Database of HiRISE images
 
 [Cross-Entropy Loss Function](https://towardsdatascience.com/cross-entropy-loss-function-f38c4ec8643e) - A more detailed explanation
+
+
+
+# Repository Structure
+```
+├── extractedData*
+├── extraNotebooks  
+├── images*
+│     ├── train
+│     |     ├── bright dune
+│     |     ├── crater
+│     |     ├── dark dune
+│     |     ├── impact ejecta
+│     |     ├── other
+│     |     ├── slope streak
+│     |     ├── spider
+│     |     └── swiss cheese
+│     ├── val
+│     |     ├── bright dune
+│     |     ├── crater
+│     |     ├── dark dune
+│     |     ├── impact ejecta
+│     |     ├── other
+│     |     ├── slope streak
+│     |     ├── spider
+│     |     └── swiss cheese
+│     └── test
+│           ├── bright dune
+│           ├── crater
+│           ├── dark dune
+│           ├── impact ejecta
+│           ├── other
+│           ├── slope streak
+│           ├── spider
+│           └── swiss cheese
+├── logs  
+├── mass_maps  
+├── savedFigs  
+├── src  
+│     └── helperFunctions.py
+|
+├── 00_GetDatasets.ipynb  
+├── 01_TensorflowModeling_Adam.ipynb  
+├── 02_TensorflowModeling_FinalModels.ipynb  
+├── 03_TensorflowModeling_AlexNet.ipynb  
+├── 04_TensorflowModeling_LeNet.ipynb  
+├── 05_TensorflowModeling_TransferLearning.ipynb
+├── 06_AnomalyDetection.ipynb
+|
+├── README.md
+├── presentation.pdf
+├── mars_anomaly_detection_app.py
+└── TweetSentimentAnalysis_nb.ipynb
+
+* = notebooks will be created as part of running the notebooks.
+```
