@@ -1,6 +1,12 @@
-# MarsTerrainAnomalyDetection
-Using a set of images, train a Neural Network to identify interesting features on Mars topography
+# Mars Terrain Anomaly Detection
+#### Training a Neural Network to identify interesting features on Martian topography, based off a images gathered by the Mars Reconnaissance Orbiter. 
 
+## Author
+
+- Saad Saeed: 
+[LinkedIn](https://www.linkedin.com/in/saadsaeed85/) |
+[GitHub](https://github.com/ssaeed85) |
+[Email](mailto:saadsaeed85@gmail.com)
 
 
 # Business Understanding
@@ -134,10 +140,8 @@ Whenever given a choice, I used MaxPooling over AveragePooling as a pooling tech
 Lets have a quick look at the two different techniques on a couple of sample images from the dataset, using a final 5x5 pooling kernel.
 
 ![img](./savedFigs/PoolingDisplayEg_01.jpg)
-![img](./savedFigs/PoolingDisplayEg_02.jpg)
 ![img](./savedFigs/PoolingDisplayEg_03.jpg)
 ![img](./savedFigs/PoolingDisplayEg_04.jpg)
-![img](./savedFigs/PoolingDisplayEg_05.jpg)
 
 As you can see, both techniques reduce the dimensions of the image by the same amount, however with slightly different results with the differences being more evident than in others. However, my main takeway should be that MaxPooling tends to increase contrast which would allow the model to learn defining features better. Average Pooling retains the look of the original image better albeit at a lower resolution.
 
@@ -188,6 +192,16 @@ As part of the above paper the two variations tested are colloquially called `VG
 VGG16 achieves 92.7% top-5 test accuracy in *ImageNet*, a dataset comprising of over 14 million images belonging to 1000 distinct classes. The weights resulting from training the architecture for weeks is the same weights we will be using to initialize our model.  
 
 The original model was designed to work off of an *RGB* image sized *224x224*. To account for this our dataset is loaded as an RGB image even though it is natively a grayscale image. An additional `Flatten()` and `softmax` layer corresponding to our number of classes is added after the `vgg` layer.
+
+![img](./savedFigs/VGG_TransferLearning_Performance.jpg)
+
+This was by far my best performing model **validation_loss** of 0.3356 and a **validation_accuracy** 90.73%. The modeling process was quite choppy. I'd like to retrain this model with potentially a smaller learning rate and/or a larger training batch size/steps per epoch. The latter I tried to optimize, however current hardware became a limiting factor.
+
+Testing our chosen VGG16 model against the test dataset gives us a performance of **loss** of 0.3541 and a **accuracy** 92.30%
+
+# Mars Anomaly Detection
+
+
 
 # Conclusions:
 The final chosen model was the VGG16 pretrained model which was run through 500 more iterations to fine tune the weights for my particular problem set. 
