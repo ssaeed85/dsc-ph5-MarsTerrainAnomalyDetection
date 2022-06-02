@@ -201,7 +201,10 @@ Testing our chosen VGG16 model against the test dataset gives us a performance o
 
 # Mars Anomaly Detection
 
+Using the model we can now parse an image of large area of mars to annotate different identifiable features. Here is one such example.
 
+![img](./savedFigs/example_map.jpg)|![img](./savedFigs/Annotated_map.png
+)
 
 # Conclusions:
 The final chosen model was the VGG16 pretrained model which was run through 500 more iterations to fine tune the weights for my particular problem set. 
@@ -223,8 +226,10 @@ https://astrogeology.usgs.gov/search/map/Mars/GlobalSurveyor/MOLA/Mars_MGS_MOLA_
 
 - Retrain AlexNet and LeNet with a smaller learning rate for a high number of iterations to see if they perform any better
 - Use pretrained weights for AlexNet and LeNet to see if it performs any better
-- Drop the majority class `other` and see if resulting models are better at delineating features. Initial forays into this were not too promising.
+- Undersample or drop the majority class `other` and see if resulting models are better at delineating features. Initial forays into this were not too promising.
 - Gather more labeled data
+- Implement *Intersection Over Union* to clean up annotation of images
+
 
 
 # Citations: 
