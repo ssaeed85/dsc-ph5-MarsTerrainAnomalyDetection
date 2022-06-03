@@ -132,12 +132,14 @@ class_names = {'bright dune': 0,
 
 
 with st.sidebar:
+    st.header('Mars Anomaly Detection')
+    st.write('By [Saad Saeed](https://github.com/ssaeed85/dsc-ph5-MarsTerrainAnomalyDetection)')
     st.title('Select colors for features:')    
     colorMap[class_names['bright dune']] = st.color_picker('Bright Dune', '#0796FF')
     colorMap[class_names['crater']] = st.color_picker('Crater', '#FF00F4')
     colorMap[class_names['dark dune']] = st.color_picker('Dark Dune', '#FF9700')
     colorMap[class_names['impact ejecta']] = st.color_picker('Impact Ejecta', '#8DFF00')
-    colorMap[class_names['other']] = st.color_picker('Other', '#F277FD')
+    colorMap[class_names['other']] = st.color_picker('Other', '#FFF301')
     colorMap[class_names['slope streak']] = st.color_picker('Slope Streak', '#FF008B')
     colorMap[class_names['spider']] = st.color_picker('Spider', '#00475C')
     colorMap[class_names['swiss cheese']] = st.color_picker('Swiss Cheese', '#000000')
@@ -145,22 +147,22 @@ with st.sidebar:
 
 
 st.title("Mars Anomaly Detection")
-
+col1, col2 = st.columns(2)
 
 # Image loader
 # imgFile = st.file_uploader("Choose an image file", type="jpg")
 imgFile = st.file_uploader("Choose an image file", type="jpg")
 
 
-
-if imgFile:
-    im = Image.open(imgFile)
-    st.image(im,caption='Welcome To Maahz')
-    disableButton = False
-    img_width,  img_height = im.size
-    df_bbox = getPotentialBboxes(im,forceCreateNew = True)
-    list_imagesToClassify = [im.crop(df_bbox.iloc[rowNum]['bbox_bounds']) 
-                        for rowNum in range(0,df_bbox.shape[0])]
+with col1:
+    if imgFile:
+        im = Image.open(imgFile)
+        st.image(im,caption='Welcome To Maahz')
+        disableButton = False
+        img_width,  img_height = im.size
+        df_bbox = getPotentialBboxes(im,forceCreateNew = True)
+        list_imagesToClassify = [im.crop(df_bbox.iloc[rowNum]['bbox_bounds']) 
+                            for rowNum in range(0,df_bbox.shape[0])]
 
 
 # Controls. Disabled until image is loaded
@@ -183,6 +185,7 @@ value=0.80,
 min_value = 0.01, 
 max_value= 1.0,
 disabled=disableButton)
+
 
 
 
@@ -217,6 +220,6 @@ if st.button('Get Predictions', disabled=disableButton):
 
     im_wAnnotations.paste(mask_img,(0,0),mask_img)
 
-
-if im_wAnnotations is not None:
-    st.image(im_wAnnotations)
+with col2:
+    if im_wAnnotations is not None:
+        st.image(im_wAnnotations)

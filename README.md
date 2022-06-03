@@ -1,8 +1,8 @@
 # Mars Terrain Anomaly Detection
 #### Training a Neural Network to identify interesting features on Martian topography, based off a images gathered by the Mars Reconnaissance Orbiter. 
 
-## Author
 
+## Author
 - Saad Saeed: 
 [LinkedIn](https://www.linkedin.com/in/saadsaeed85/) |
 [GitHub](https://github.com/ssaeed85) |
@@ -201,14 +201,17 @@ Testing our chosen VGG16 model against the test dataset gives us a performance o
 
 # Mars Anomaly Detection
 
-Using the model we can now parse an image of large area of mars to annotate different identifiable features. Here is one such example.
+Using the model we can now parse an image of large area of mars to annotate different identifiable features. Here is one such example where the model was used to highlight all craters with a 90%  confidence threshold.
 
-![img](./savedFigs/example_map.jpg)|![img](./savedFigs/Annotated_map.png
+![img](./savedFigs/example_map.jpg) ![img](./savedFigs/Annotated_map.png
 )
 
+Clearly, the model missed a few obvious craters. 
+
+
 # Conclusions:
-The final chosen model was the VGG16 pretrained model which was run through 500 more iterations to fine tune the weights for my particular problem set. 
-Although the metrics of the final model is quantitatively satisfactory, its performance on true unseen data was poor. The imbalance in the dataset aside, the class of `others` was essentially a catch all for images that couldn't be classified into the other categories and/or human labelers had a hard time classifying in general. 
+
+Although the metrics of the final model is quantitatively satisfactory, its performance on true unseen data was underwhelming. The imbalance in the dataset aside, the class of `others` was essentially a catch all for images that couldn't be classified into the other categories and/or human labelers had a hard time classifying in general. 
 
 Even to the human eye these might look like they belong to the same set of features but they do not. The images belong to the classes `crater`, `impact ejecta` and `other` respectively.
 
@@ -216,7 +219,7 @@ Even to the human eye these might look like they belong to the same set of featu
 ![img](./savedFigs/eg_impactejecta.jpg) 
 ![img](./savedFigs/eg_other.jpg) 
 
-One potential way of solving this issue would be to get even more data, but more importantly labeled data. This is especially true for the underepresented features like `spider`s and `impact ejecta`s. Completely reassessing how to classify these images might also help.
+One potential way of solving this issue would be to get even more data, but more importantly true labeled data. This is especially true for the underepresented features like `spider`s and `impact ejecta`s. Completely reassessing how to classify these images might also help.
 
 
 Image to slide on:
@@ -224,10 +227,11 @@ https://astrogeology.usgs.gov/search/map/Mars/GlobalSurveyor/MOLA/Mars_MGS_MOLA_
 
 # Next Steps:
 
-- Retrain AlexNet and LeNet with a smaller learning rate for a high number of iterations to see if they perform any better
-- Use pretrained weights for AlexNet and LeNet to see if it performs any better
+- Retrain AlexNet and LeNet with a smaller learning rate for a high number of iterations
+- Use pretrained weights for AlexNet and LeNet
+- Train the VGG16 model for more epochs for a smaller learning rate, however I believe at this point there will be some diminishing returns.
 - Undersample or drop the majority class `other` and see if resulting models are better at delineating features. Initial forays into this were not too promising.
-- Gather more labeled data
+- Gather more labeled data to help minority representation.
 - Implement *Intersection Over Union* to clean up annotation of images
 
 
@@ -248,40 +252,41 @@ Geoffrey E. Hinton
 
 # Repository Structure
 ```
-├── extractedData*
+├── extractedData *
 ├── extraNotebooks  
-├── images*
-│     ├── train
-│     |     ├── bright dune
-│     |     ├── crater
-│     |     ├── dark dune
-│     |     ├── impact ejecta
-│     |     ├── other
-│     |     ├── slope streak
-│     |     ├── spider
-│     |     └── swiss cheese
-│     ├── val
-│     |     ├── bright dune
-│     |     ├── crater
-│     |     ├── dark dune
-│     |     ├── impact ejecta
-│     |     ├── other
-│     |     ├── slope streak
-│     |     ├── spider
-│     |     └── swiss cheese
-│     └── test
-│           ├── bright dune
-│           ├── crater
-│           ├── dark dune
-│           ├── impact ejecta
-│           ├── other
-│           ├── slope streak
-│           ├── spider
-│           └── swiss cheese
+├── images *
+│     ├── train *
+│     |     ├── bright dune *
+│     |     ├── crater *
+│     |     ├── dark dune *
+│     |     ├── impact ejecta *
+│     |     ├── other *
+│     |     ├── slope streak *
+│     |     ├── spider *
+│     |     └── swiss cheese *
+│     ├── val *
+│     |     ├── bright dune *
+│     |     ├── crater *
+│     |     ├── dark dune *
+│     |     ├── impact ejecta *
+│     |     ├── other *
+│     |     ├── slope streak *
+│     |     ├── spider *
+│     |     └── swiss cheese *
+│     └── test *
+│           ├── bright dune *
+│           ├── crater *
+│           ├── dark dune *
+│           ├── impact ejecta *
+│           ├── other *
+│           ├── slope streak *
+│           ├── spider *
+│           └── swiss cheese *
 ├── logs  
 ├── mass_maps  
 ├── savedFigs  
 ├── src  
+│     ├── imageHandler.py
 │     └── helperFunctions.py
 |
 ├── 00_GetDatasets.ipynb  
@@ -295,6 +300,7 @@ Geoffrey E. Hinton
 ├── README.md
 ├── presentation.pdf
 ├── mars_anomaly_detection_app.py
+├── environment.yml
 └── TweetSentimentAnalysis_nb.ipynb
 
 * = notebooks will be created as part of running the notebooks.
