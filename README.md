@@ -237,7 +237,7 @@ One potential way of solving this issue would be to get even more data, but more
 # Citations: 
 
 [Gradient-Based Learning Applied to Document Recognition](http://yann.lecun.com/exdb/publis/pdf/lecun-98.pdf) - LeNet-5 - Yann LeCun, Léon Bottou, Yoshua Bengio, Patrick Haffner  
-[ImageNet Classification with Deep Convolutional Neural Networks]( \https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf) - AlexNet - Alex Krizhevsky,
+[ImageNet Classification with Deep Convolutional Neural Networks](\https://proceedings.neurips.cc/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf) - AlexNet - Alex Krizhevsky,
 Ilya Sutskever,
 Geoffrey E. Hinton  
 [Very Deep Convolutional Networks for Large-Scale Image Recognition](https://arxiv.org/abs/1409.1556) - VGG - Karen Simonyan, Andrew Zisserman  
@@ -246,6 +246,8 @@ Geoffrey E. Hinton
 
 [Cross-Entropy Loss Function](https://towardsdatascience.com/cross-entropy-loss-function-f38c4ec8643e) - A more detailed explanation
 
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4002935.svg)](https://doi.org/10.5281/zenodo.4002935) - Dataset
 
 
 # Repository Structure
