@@ -222,8 +222,6 @@ Even to the human eye these might look like they belong to the same set of featu
 One potential way of solving this issue would be to get even more data, but more importantly true labeled data. This is especially true for the underepresented features like `spider`s and `impact ejecta`s. Completely reassessing how to classify these images might also help.
 
 
-Image to slide on:
-https://astrogeology.usgs.gov/search/map/Mars/GlobalSurveyor/MOLA/Mars_MGS_MOLA_Shade_global_463m
 
 # Next Steps:
 
