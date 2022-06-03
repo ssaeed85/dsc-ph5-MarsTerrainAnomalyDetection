@@ -203,8 +203,7 @@ Testing our chosen VGG16 model against the test dataset gives us a performance o
 
 Using the model we can now parse an image of large area of mars to annotate different identifiable features. Here is one such example where the model was used to highlight all craters with a 90%  confidence threshold.
 
-![img](./savedFigs/example_map.jpg) ![img](./savedFigs/Annotated_map.png
-)
+![img](./savedFigs/example_map.jpg) ![img](./savedFigs/Annotated_map.png)
 
 Clearly, the model missed a few obvious craters. 
 
@@ -290,7 +289,7 @@ Geoffrey E. Hinton
 │     └── helperFunctions.py
 |
 ├── 00_GetDatasets.ipynb  
-├── 01_TensorflowModeling_Adam.ipynb  
+├── 01_TensorflowModeling_CNN.ipynb  
 ├── 02_TensorflowModeling_FinalModels.ipynb  
 ├── 03_TensorflowModeling_AlexNet.ipynb  
 ├── 04_TensorflowModeling_LeNet.ipynb  
