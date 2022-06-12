@@ -1,3 +1,5 @@
+![img](./savedFigs/Mars%20Topography%20Header.png)
+
 # Mars Terrain Anomaly Detection
 #### Training a Neural Network to identify interesting features on Martian topography, based off a images gathered by the Mars Reconnaissance Orbiter. 
 
