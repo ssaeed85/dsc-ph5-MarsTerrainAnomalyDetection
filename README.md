@@ -203,11 +203,11 @@ Testing our chosen VGG16 model against the test dataset gives us a performance o
 
 # Mars Anomaly Detection
 
-Using the model we can now parse an image of large area of mars to annotate different identifiable features. Here is one such example where the model was used to highlight all craters with a 90%  confidence threshold.
+Using the model we can now parse an image of large area of mars to annotate different identifiable features. Here is one such example where the model was used to highlight all craters with a 99%  confidence threshold.
 
 ![img](./savedFigs/example_map.jpg) ![img](./savedFigs/Annotated_map.png)
 
-Clearly, the model missed a few obvious craters. 
+Clearly, the model missed a few obvious craters but there is a lot of overlap in areas with high density of craters.
 
 
 # Conclusions:
