@@ -50,7 +50,7 @@ def createNewPotentialBboxes(imgObj):
     df_list = []
     
 
-    for winsize in [ (277*0.75) , (277), (277*1.5),(277*2)]:
+    for winsize in [(277*0.5), (277*0.75) , (277), (277*1.5),(277*2),(277*2.5),(277*3)]:
         winsize = round(winsize)        
         
         if (winsize > img_width) or (winsize > img_height):
