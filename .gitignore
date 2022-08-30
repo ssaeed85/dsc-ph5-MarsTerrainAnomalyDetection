@@ -131,6 +131,7 @@ dmypy.json
 # Custom Rules:
 # ignore image sub folders
 images/*/
+imagesBinary/*/
 
 # ignores subfolders
 data/*/

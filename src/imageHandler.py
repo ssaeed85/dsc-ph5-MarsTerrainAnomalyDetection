@@ -45,12 +45,12 @@ def createNewPotentialBboxes(imgObj):
     Dataframe is also saved as a CSV file is saved in the same directory as the large maps
     '''
     img_width,  img_height = imgObj.size
-    overlap = 0.4
+    overlap = 0.75
 
     df_list = []
     
 
-    for winsize in [ (277*0.75) , (277), (277*1.5)]:
+    for winsize in [(277*0.5), (277*0.75) , (277), (277*1.5),(277*2),(277*2.5),(277*3)]:
         winsize = round(winsize)        
         
         if (winsize > img_width) or (winsize > img_height):
